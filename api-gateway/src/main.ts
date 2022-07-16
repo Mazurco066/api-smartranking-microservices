@@ -6,6 +6,7 @@ import * as momentTimezone from 'moment-timezone'
 // Server implementation dependencies
 import { AppModule } from './app.module'
 import { HttpExceptionFilter } from './filters'
+import { LoggingInterceptor, TimeoutInterceptor } from './interceptors'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -19,8 +20,10 @@ async function bootstrap() {
 
   // Pipes, filters and prefixes
   app.useGlobalPipes(new ValidationPipe(validationOptions))
-  app.useGlobalFilters(
-    new HttpExceptionFilter()
+  app.useGlobalFilters(new HttpExceptionFilter())
+  app.useGlobalInterceptors(
+    new LoggingInterceptor(),
+    new TimeoutInterceptor()
   )
 
   // Date default format

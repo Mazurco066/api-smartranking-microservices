@@ -15,7 +15,8 @@ async function bootstrap() {
     transport: Transport.RMQ,
     options: {
       urls: ['amqp://guest:guest@localhost:5672/smartranking'],
-      queue: 'admin-backend'
+      queue: 'admin-backend',
+      noAck: false
     }
   })
 

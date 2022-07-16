@@ -26,7 +26,7 @@ export class CategoriesService {
 
     const isRegistered = await this.findByTitle(body.title)
     if (isRegistered) {
-      throw new RpcException(`Categoria ${body.title} já cadastrada!`)
+      throw new RpcException(`[E11000] Categoria ${body.title} já cadastrada!`)
     }
 
     return await this.store(body)
@@ -37,7 +37,7 @@ export class CategoriesService {
 
     const isRegistered = await this.findById(id)
     if (!isRegistered) {
-      throw new RpcException(`Categoria ${id} não encontrada!`)
+      throw new RpcException(`[E404] Categoria ${id} não encontrada!`)
     }
 
     return await this.update(body, id)
@@ -50,7 +50,7 @@ export class CategoriesService {
   async findCategory(id: string): Promise<Category> {
     const foundCategory = await this.findById(id)
     if (!foundCategory) {
-      throw new RpcException(`Categoria de id ${id} não encontrada!`)
+      throw new RpcException(`[E404] Categoria de id ${id} não encontrada!`)
     }
 
     return foundCategory
@@ -59,7 +59,7 @@ export class CategoriesService {
   async deleteCategory(id: string): Promise<void> {
     const foundCategory = await this.findById(id)
     if (!foundCategory) {
-      throw new RpcException(`Categoria de id ${id} não encontrada!`)
+      throw new RpcException(`[E404] Categoria de id ${id} não encontrada!`)
     }
 
     await this.delete(id)
@@ -70,7 +70,7 @@ export class CategoriesService {
 
     const isRegistered = await this.findById(params['id'])
     if (!isRegistered) {
-      throw new RpcException(`Categoria ${params['id']} não encontrada!`)
+      throw new RpcException(`[E404] Categoria ${params['id']} não encontrada!`)
     }
 
     const isPlayerRegistered = await this.playersService.findPlayer(params['playerId'])

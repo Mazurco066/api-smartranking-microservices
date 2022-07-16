@@ -1,0 +1,1 @@
+export const ackMongodbErrors: string[] = ['E404', 'E11000']
