@@ -27,6 +27,7 @@ export class CategoriesController {
   // Create categories following microservices event subscriber feature
   @Post()
   addCategory(@Body() body: AddCategoryDTO): AddCategoryDTO {
+    this.logger.log(`Add Category: ${JSON.stringify(body)}`)
     this.clientAdminBackend.emit('add-category', body)
     return body
   }  
@@ -34,11 +35,13 @@ export class CategoriesController {
   // Retrieve categories following microservices request/responder feature
   @Get()
   findCategory(@Query('id') id: string): Observable<any> {
+    this.logger.log(`Find Categories: ${id}`)
     return this.clientAdminBackend.send('get-categories', id ? id : '')
   }
 
   @Delete('/:id')
   deleteCategory(@Param('id', ValidateParamsPipe) _id: string) {
+    this.logger.log(`Delete Category: ${_id}`)
     return this.clientAdminBackend.send('delete-category', _id)
   }
 
@@ -47,6 +50,7 @@ export class CategoriesController {
     @Body() body: UpdateCategoryDTO,
     @Param('id', ValidateParamsPipe) _id: string
   ) {
+    this.logger.log(`Update Category: ${JSON.stringify(body)}`)
     return this.clientAdminBackend.send('update-category', { id: _id, category: body })
   }
 }
