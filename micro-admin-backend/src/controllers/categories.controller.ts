@@ -49,7 +49,8 @@ export class CategoriesController {
     }
   }
 
-  @EventPattern('update-category')
+  // Message broker feature (microservices)
+  @MessagePattern('update-category')
   async updateCategory(
     @Payload() data: any,
     @Ctx() context: RmqContext
@@ -66,8 +67,9 @@ export class CategoriesController {
       // Persist and ack message
       const id: string = data.id
       const category: CategoryInterface = data.category
-      await this.categoriesService.updateCategory(category, id)
+      const returnPayload = await this.categoriesService.updateCategory(category, id)
       await channel.ack(defaultMessage)
+      return returnPayload
 
     } catch (error) {
       this.logger.error(`Error: ${JSON.stringify(error.message)}`)
@@ -75,7 +77,6 @@ export class CategoriesController {
     }
   }
 
-  // Message broker feature (microservices)
   @MessagePattern('get-categories')
   async getCategories(
     @Payload() id: string,
@@ -120,7 +121,7 @@ export class CategoriesController {
       // Persist and ack message
       await this.categoriesService.deleteCategory(id)
       await channel.ack(defaultMessage)
-      return id
+      return { id }
 
     } catch (error) {
       this.logger.error(`Error: ${JSON.stringify(error.message)}`)

@@ -29,6 +29,17 @@ export class AppController {
   addCategory(@Body() body: AddCategoryDTO): AddCategoryDTO {
     this.clientAdminBackend.emit('add-category', body)
     return body
+  }  
+  
+  // Retrieve categories following microservices request/responder feature
+  @Get('categories')
+  findCategory(@Query('id') id: string): Observable<any> {
+    return this.clientAdminBackend.send('get-categories', id ? id : '')
+  }
+
+  @Delete('categories/:id')
+  deleteCategory(@Param('id', ValidateParamsPipe) _id: string) {
+    return this.clientAdminBackend.send('delete-category', _id)
   }
 
   @Put('categories/:id')
@@ -36,17 +47,6 @@ export class AppController {
     @Body() body: UpdateCategoryDTO,
     @Param('id', ValidateParamsPipe) _id: string
   ) {
-    this.clientAdminBackend.emit('update-category', { id: _id, category: body })
-  }
-
-  @Delete('categories/:id')
-  deleteCategory(@Param('id', ValidateParamsPipe) _id: string) {
-    this.clientAdminBackend.emit('delete-category', _id)
-  }
-  
-  // Retrieve categories following microservices request/responder feature
-  @Get('categories')
-  findCategory(@Query('id') id: string): Observable<any> {
-    return this.clientAdminBackend.send('get-categories', id ? id : '')
+    return this.clientAdminBackend.send('update-category', { id: _id, category: body })
   }
 }
