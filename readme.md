@@ -1,4 +1,4 @@
-# Smartranking API
+# SmartRanking API
 
 This is a sample project testing microservices using [NestJs](https://nestjs.com) and [RabbitMQ](https://www.rabbitmq.com)
 
