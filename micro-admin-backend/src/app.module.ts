@@ -3,8 +3,8 @@ import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
 
 // Implementation
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
+import { CategoriesController, PlayersController } from './controllers'
+import { CategoriesService, PlayersService } from './services'
 import { databaseURI } from './config'
 import { Category, CategorySchema, Player, PlayerSchema } from './interfaces'
 
@@ -20,7 +20,7 @@ import { Category, CategorySchema, Player, PlayerSchema } from './interfaces'
       { name: Player.name, schema: PlayerSchema }
     ])
   ],
-  controllers: [ AppController ],
-  providers: [ AppService ]
+  controllers: [ CategoriesController, PlayersController ],
+  providers: [ CategoriesService, PlayersService ]
 })
 export class AppModule {}

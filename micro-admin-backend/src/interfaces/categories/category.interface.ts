@@ -1,14 +1,14 @@
 // Dependencies
 import { Document } from 'mongoose'
 
-export interface Event {
+export interface EventInterface {
   name: string
   operation: string
   value: number
 }
 
-export interface Category extends Document {
+export interface CategoryInterface extends Document {
   readonly title: string
   description: string
-  events: Array<Event>
+  events: Array<EventInterface>
 }

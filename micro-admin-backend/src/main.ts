@@ -20,7 +20,7 @@ async function bootstrap() {
   })
 
   // Bind to a port
-  logger.log('Microservice is listening')
+  logger.log('(AdminBackend) Microservice is listening')
   await app.listen()
 }
 
