@@ -1,6 +1,8 @@
 # compiled output
 /api-gateway/dist
 /api-gateway/node_modules
+/micro-admin-backend/dist
+/micro-admin-backend/node_modules
 
 # Logs
 /api-gateway/logs
@@ -10,13 +12,22 @@
 /api-gateway/yarn-debug.log*
 /api-gateway/yarn-error.log*
 /api-gateway/lerna-debug.log*
+/micro-admin-backend/logs
+/micro-admin-backend/*.log
+/micro-admin-backend/npm-debug.log*
+/micro-admin-backend/pnpm-debug.log*
+/micro-admin-backend/yarn-debug.log*
+/micro-admin-backend/yarn-error.log*
+/micro-admin-backend/lerna-debug.log*
 
 # OS
 .DS_Store
 
 # Tests
-/api-gateway//coverage
+/api-gateway/coverage
 /api-gateway/.nyc_output
+/micro-admin-backend/coverage
+/micro-admin-backend/.nyc_output
 
 # IDEs and editors
 /.idea
