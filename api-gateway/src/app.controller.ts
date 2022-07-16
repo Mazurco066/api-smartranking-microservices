@@ -1,10 +1,11 @@
 // Dependencies
-import { Body, Controller, Post, Get, Logger, Query } from '@nestjs/common'
+import { Body, Controller, Post, Get, Put, Logger, Query, Param, Delete } from '@nestjs/common'
 import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices'
 import { Observable } from 'rxjs'
 
 // Implementations
-import { AddCategoryDTO } from './dtos'
+import { AddCategoryDTO, UpdateCategoryDTO } from './dtos'
+import { ValidateParamsPipe } from './pipes'
 
 @Controller('api/v1')
 export class AppController {
@@ -28,6 +29,19 @@ export class AppController {
   addCategory(@Body() body: AddCategoryDTO): AddCategoryDTO {
     this.clientAdminBackend.emit('add-category', body)
     return body
+  }
+
+  @Put('categories/:id')
+  updatedCategory(
+    @Body() body: UpdateCategoryDTO,
+    @Param('id', ValidateParamsPipe) _id: string
+  ) {
+    this.clientAdminBackend.emit('update-category', { id: _id, category: body })
+  }
+
+  @Delete('categories/:id')
+  deleteCategory(@Param('id', ValidateParamsPipe) _id: string) {
+    this.clientAdminBackend.emit('delete-category', _id)
   }
   
   // Retrieve categories following microservices request/responder feature

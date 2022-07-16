@@ -49,6 +49,32 @@ export class CategoriesController {
     }
   }
 
+  @EventPattern('update-category')
+  async updateCategory(
+    @Payload() data: any,
+    @Ctx() context: RmqContext
+  ) {
+    // Logging event
+    this.logger.log(`Update Category data: ${JSON.stringify(data)}`)
+
+    // Retrieve original message and nestjs channel
+    const channel = context.getChannelRef()
+    const defaultMessage = context.getMessage()
+
+    try {
+
+      // Persist and ack message
+      const id: string = data.id
+      const category: CategoryInterface = data.category
+      await this.categoriesService.updateCategory(category, id)
+      await channel.ack(defaultMessage)
+
+    } catch (error) {
+      this.logger.error(`Error: ${JSON.stringify(error.message)}`)
+      ackErrorMessage(error, channel, defaultMessage)
+    }
+  }
+
   // Message broker feature (microservices)
   @MessagePattern('get-categories')
   async getCategories(
@@ -70,6 +96,31 @@ export class CategoriesController {
         : await this.categoriesService.findCategories()
       await channel.ack(defaultMessage)
       return returnPayload
+
+    } catch (error) {
+      this.logger.error(`Error: ${JSON.stringify(error.message)}`)
+      ackErrorMessage(error, channel, defaultMessage)
+    }
+  }
+
+  @MessagePattern('delete-category')
+  async deleteCategories(
+    @Payload() id: string,
+    @Ctx() context: RmqContext
+  ) {
+    // Logging event
+    this.logger.log(`Category id: ${id}`)
+
+    // Retrieve original message and nestjs channel
+    const channel = context.getChannelRef()
+    const defaultMessage = context.getMessage()
+
+    try {
+
+      // Persist and ack message
+      await this.categoriesService.deleteCategory(id)
+      await channel.ack(defaultMessage)
+      return id
 
     } catch (error) {
       this.logger.error(`Error: ${JSON.stringify(error.message)}`)
