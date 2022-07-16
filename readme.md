@@ -7,6 +7,16 @@ This is a sample project testing microservices using [NestJs](https://nestjs.com
 Assuming you have [yarn](https://yarnpkg.com/), run the following commands to install dependencies and run the App:
 
 ```sh
+# Start RabbitMQ service on localhost
+docker-compose up --build -d
+
+# Install dependendencies and start api-gateway
+cd api-gateway
+yarn install
+yarn start:dev
+
+# Install dependendencies and start micro-admin-backend
+cd micro-admin-backend
 yarn install
 yarn start:dev
 ```
