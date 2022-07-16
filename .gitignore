@@ -20,6 +20,9 @@
 /micro-admin-backend/yarn-error.log*
 /micro-admin-backend/lerna-debug.log*
 
+# Envs
+/micro-admin-backend/.env
+
 # OS
 .DS_Store
 
