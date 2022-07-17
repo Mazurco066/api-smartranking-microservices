@@ -34,12 +34,10 @@ export class CategoriesService {
 
   async updateCategory(body: CategoryInterface, id: string): Promise<Category> {
     this.logger.log(`updateCategory - params: ${JSON.stringify(body)}`)
-
-    const isRegistered = await this.findById(id)
-    if (!isRegistered) {
-      throw new RpcException(`[E404] Categoria ${id} não encontrada!`)
-    }
-
+    // const isRegistered = await this.findById(id)
+    // if (!isRegistered) {
+    //   throw new RpcException(`[E404] Categoria ${id} não encontrada!`)
+    // }
     return await this.update(body, id)
   }
 
@@ -49,19 +47,17 @@ export class CategoriesService {
 
   async findCategory(id: string): Promise<Category> {
     const foundCategory = await this.findById(id)
-    if (!foundCategory) {
-      throw new RpcException(`[E404] Categoria de id ${id} não encontrada!`)
-    }
-
+    // if (!foundCategory) {
+    //   throw new RpcException(`[E404] Categoria de id ${id} não encontrada!`)
+    // }
     return foundCategory
   }
 
   async deleteCategory(id: string): Promise<void> {
-    const foundCategory = await this.findById(id)
-    if (!foundCategory) {
-      throw new RpcException(`[E404] Categoria de id ${id} não encontrada!`)
-    }
-
+    // const foundCategory = await this.findById(id)
+    // if (!foundCategory) {
+    //   throw new RpcException(`[E404] Categoria de id ${id} não encontrada!`)
+    // }
     await this.delete(id)
   }
 

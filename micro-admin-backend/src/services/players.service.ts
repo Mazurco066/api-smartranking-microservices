@@ -32,10 +32,9 @@ export class PlayersService {
 
   async findPlayer(id: string): Promise<Player> {
     const player = await this.searchPlayer(id)
-    if (!player) {
-      throw new RpcException(`[E404] Jogador de id ${id} não encontrado!`)
-    }
-
+    // if (!player) {
+    //   throw new RpcException(`[E404] Jogador de id ${id} não encontrado!`)
+    // }
     return player
   }
 

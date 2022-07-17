@@ -1,6 +1,6 @@
 // Dependencies
-import { Body, Controller, Post, Get, Put, Logger, Query, Param, Delete } from '@nestjs/common'
-import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices'
+import { Body, Controller, Post, Get, Put, Logger, Query, Param, Delete, NotFoundException, BadRequestException } from '@nestjs/common'
+import { ClientProxy } from '@nestjs/microservices'
 import { Observable } from 'rxjs'
 
 // Implementations
@@ -29,23 +29,50 @@ export class CategoriesController {
   
   // Retrieve categories following microservices request/responder feature
   @Get()
-  findCategory(@Query('id') id: string): Observable<any> {
+  async findCategory(@Query('id') id: string): Promise<Observable<any>> {
     this.logger.log(`Find Categories: ${id}`)
+
+    // Verify if register exists
+    if (id) {
+      const isRegistered = await this.clientAdminBackend.send('check-category', id).toPromise()
+      if (!isRegistered) {
+        throw new NotFoundException(`Categoria de id ${id} não encontrada!`)
+      }
+    }
+
     return this.clientAdminBackend.send('get-categories', id ? id : '')
   }
 
   @Delete('/:id')
-  deleteCategory(@Param('id', ValidateParamsPipe) _id: string) {
+  async deleteCategory(@Param('id', ValidateParamsPipe) _id: string) {
     this.logger.log(`Delete Category: ${_id}`)
+
+    // Verify if register exists
+    if (_id) {
+      const isRegistered = await this.clientAdminBackend.send('check-category', _id).toPromise()
+      if (!isRegistered) {
+        throw new BadRequestException(`Categoria de id ${_id} não encontrada!`)
+      }
+    }
+
     return this.clientAdminBackend.send('delete-category', _id)
   }
 
   @Put('/:id')
-  updatedCategory(
+  async updatedCategory(
     @Body() body: UpdateCategoryDTO,
     @Param('id', ValidateParamsPipe) _id: string
   ) {
     this.logger.log(`Update Category: ${JSON.stringify(body)}`)
+
+    // Verify if register exists
+    if (_id) {
+      const isRegistered = await this.clientAdminBackend.send('check-category', _id).toPromise()
+      if (!isRegistered) {
+        throw new BadRequestException(`Categoria de id ${_id} não encontrada!`)
+      }
+    }
+
     return this.clientAdminBackend.send('update-category', { id: _id, category: body })
   }
 }
