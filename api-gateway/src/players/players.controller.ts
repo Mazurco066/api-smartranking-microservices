@@ -4,8 +4,9 @@ import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservice
 import { Observable } from 'rxjs'
 
 // Implementations
-import { AddPlayerDTO, UpdatePlayerDTO } from '../dtos'
-import { ValidateParamsPipe } from '../pipes'
+import { AddPlayerDTO, UpdatePlayerDTO } from './dtos'
+import { ValidateParamsPipe } from '../common/pipes'
+import { proxyClient } from '../common/helpers'
 
 @Controller('api/v1/players')
 export class PlayersController {
@@ -13,15 +14,9 @@ export class PlayersController {
   private logger = new Logger(PlayersController.name)
   private clientAdminBackend: ClientProxy
 
-  // Class constructor
+  // Class constructor (Retrieve rabbitmq proxy connection)
   constructor() {
-    this.clientAdminBackend = ClientProxyFactory.create({
-      transport: Transport.RMQ,
-      options: {
-        urls: ['amqp://guest:guest@localhost:5672/smartranking'],
-        queue: 'admin-backend'
-      }
-    })
+    this.clientAdminBackend = proxyClient
   }
 
   @Post()

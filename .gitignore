@@ -21,6 +21,7 @@
 /micro-admin-backend/lerna-debug.log*
 
 # Envs
+/api-gateway/.env
 /micro-admin-backend/.env
 
 # OS

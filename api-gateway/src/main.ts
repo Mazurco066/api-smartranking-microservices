@@ -5,9 +5,10 @@ import * as momentTimezone from 'moment-timezone'
 
 // Server implementation dependencies
 import { AppModule } from './app.module'
-import { HttpExceptionFilter } from './filters'
-import { LoggingInterceptor, TimeoutInterceptor } from './interceptors'
+import { HttpExceptionFilter } from './common/filters'
+import { LoggingInterceptor, TimeoutInterceptor } from './common/interceptors'
 
+// Create api gateway instance factory
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 

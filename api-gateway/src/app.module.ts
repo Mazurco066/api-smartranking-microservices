@@ -1,10 +1,13 @@
 // Dependencies
 import { Module } from '@nestjs/common'
-import { CategoriesController, PlayersController } from './controllers'
+
+// Modules
+import { CategoriesModule } from './categories/categories.module'
+import { PlayersModule } from './players/players.module'
 
 @Module({
-  imports: [],
-  controllers: [ CategoriesController, PlayersController ],
+  imports: [ CategoriesModule, PlayersModule ],
+  controllers: [],
   providers: []
 })
 export class AppModule {}

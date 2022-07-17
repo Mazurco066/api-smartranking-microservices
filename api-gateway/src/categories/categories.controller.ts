@@ -4,8 +4,9 @@ import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservice
 import { Observable } from 'rxjs'
 
 // Implementations
-import { AddCategoryDTO, UpdateCategoryDTO } from '../dtos'
-import { ValidateParamsPipe } from '../pipes'
+import { AddCategoryDTO, UpdateCategoryDTO } from './dtos'
+import { ValidateParamsPipe } from '../common/pipes'
+import { proxyClient } from '../common/helpers'
 
 @Controller('api/v1/categories')
 export class CategoriesController {
@@ -13,15 +14,9 @@ export class CategoriesController {
   private logger = new Logger(CategoriesController.name)
   private clientAdminBackend: ClientProxy
 
-  // Class constructor
+  // Class constructor (Retrieve rabbitmq proxy connection)
   constructor() {
-    this.clientAdminBackend = ClientProxyFactory.create({
-      transport: Transport.RMQ,
-      options: {
-        urls: ['amqp://guest:guest@localhost:5672/smartranking'],
-        queue: 'admin-backend'
-      }
-    })
+    this.clientAdminBackend = proxyClient
   }
 
   // Create categories following microservices event subscriber feature
