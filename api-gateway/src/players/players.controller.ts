@@ -6,7 +6,7 @@ import { Observable, firstValueFrom } from 'rxjs'
 // Implementations
 import { AddPlayerDTO, UpdatePlayerDTO } from './dtos'
 import { ValidateParamsPipe } from '../common/pipes'
-import { proxyClient } from '../common/helpers'
+import { proxyClientAdmin } from '../common/helpers'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service'
 
@@ -20,7 +20,7 @@ export class PlayersController {
   constructor(
     private cloudinaryService: CloudinaryService
   ) {
-    this.clientAdminBackend = proxyClient
+    this.clientAdminBackend = proxyClientAdmin
   }
 
   @Post()

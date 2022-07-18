@@ -7,10 +7,18 @@ config()
 const proxyUri = process.env.PROXY_URI
 
 // Create RabbitMq Proxy connection
-export const proxyClient = ClientProxyFactory.create({
+export const proxyClientAdmin = ClientProxyFactory.create({
   transport: Transport.RMQ,
   options: {
     urls: [ proxyUri ],
     queue: 'admin-backend'
+  }
+})
+
+export const proxyClientChallenges = ClientProxyFactory.create({
+  transport: Transport.RMQ,
+  options: {
+    urls: [ proxyUri ],
+    queue: 'challenges'
   }
 })

@@ -6,7 +6,7 @@ import { firstValueFrom, Observable } from 'rxjs'
 // Implementations
 import { AddCategoryDTO, UpdateCategoryDTO } from './dtos'
 import { ValidateParamsPipe } from '../common/pipes'
-import { proxyClient } from '../common/helpers'
+import { proxyClientAdmin } from '../common/helpers'
 
 @Controller('api/v1/categories')
 export class CategoriesController {
@@ -16,7 +16,7 @@ export class CategoriesController {
 
   // Class constructor (Retrieve rabbitmq proxy connection)
   constructor() {
-    this.clientAdminBackend = proxyClient
+    this.clientAdminBackend = proxyClientAdmin
   }
 
   // Create categories following microservices event subscriber feature
