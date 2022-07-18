@@ -3,6 +3,8 @@
 /api-gateway/node_modules
 /micro-admin-backend/dist
 /micro-admin-backend/node_modules
+/micro-challenges/dist
+/micro-challenges/node_modules
 
 # Logs
 /api-gateway/logs
@@ -19,10 +21,18 @@
 /micro-admin-backend/yarn-debug.log*
 /micro-admin-backend/yarn-error.log*
 /micro-admin-backend/lerna-debug.log*
+/micro-challenges/logs
+/micro-challenges/*.log
+/micro-challenges/npm-debug.log*
+/micro-challenges/pnpm-debug.log*
+/micro-challenges/yarn-debug.log*
+/micro-challenges/yarn-error.log*
+/micro-challenges/lerna-debug.log*
 
 # Envs
 /api-gateway/.env
 /micro-admin-backend/.env
+/micro-challenges/.env
 
 # OS
 .DS_Store
@@ -32,6 +42,8 @@
 /api-gateway/.nyc_output
 /micro-admin-backend/coverage
 /micro-admin-backend/.nyc_output
+/micro-challenges/coverage
+/micro-challenges/.nyc_output
 
 # IDEs and editors
 /.idea
