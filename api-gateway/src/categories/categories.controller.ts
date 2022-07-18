@@ -1,7 +1,7 @@
 // Dependencies
 import { Body, Controller, Post, Get, Put, Logger, Query, Param, Delete, NotFoundException, BadRequestException } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
-import { Observable } from 'rxjs'
+import { firstValueFrom, Observable } from 'rxjs'
 
 // Implementations
 import { AddCategoryDTO, UpdateCategoryDTO } from './dtos'
@@ -34,7 +34,7 @@ export class CategoriesController {
 
     // Verify if register exists
     if (id) {
-      const isRegistered = await this.clientAdminBackend.send('check-category', id).toPromise()
+      const isRegistered = await firstValueFrom(this.clientAdminBackend.send('check-category', id))
       if (!isRegistered) {
         throw new NotFoundException(`Categoria de id ${id} não encontrada!`)
       }
@@ -49,7 +49,7 @@ export class CategoriesController {
 
     // Verify if register exists
     if (_id) {
-      const isRegistered = await this.clientAdminBackend.send('check-category', _id).toPromise()
+      const isRegistered = await firstValueFrom(this.clientAdminBackend.send('check-category', _id))
       if (!isRegistered) {
         throw new BadRequestException(`Categoria de id ${_id} não encontrada!`)
       }
@@ -67,7 +67,7 @@ export class CategoriesController {
 
     // Verify if register exists
     if (_id) {
-      const isRegistered = await this.clientAdminBackend.send('check-category', _id).toPromise()
+      const isRegistered = await firstValueFrom(this.clientAdminBackend.send('check-category', _id))
       if (!isRegistered) {
         throw new BadRequestException(`Categoria de id ${_id} não encontrada!`)
       }

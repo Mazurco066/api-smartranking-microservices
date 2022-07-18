@@ -1,7 +1,7 @@
 // Dependencies
 import { Body, Controller, Post, Get, Put, Logger, Query, Param, Delete, NotFoundException, BadRequestException } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
-import { Observable } from 'rxjs'
+import { Observable, firstValueFrom } from 'rxjs'
 
 // Implementations
 import { AddPlayerDTO, UpdatePlayerDTO } from './dtos'
@@ -31,7 +31,8 @@ export class PlayersController {
 
     // Verify if register exists
     if (id) {
-      const isRegistered = await this.clientAdminBackend.send('check-player', id).toPromise()
+      // const isRegistered = await this.clientAdminBackend.send('check-player', id).toPromise()
+      const isRegistered = await firstValueFrom(this.clientAdminBackend.send('check-player', id))
       if (!isRegistered) {
         throw new NotFoundException(`Jogador de id ${id} não encontrado!`)
       }
@@ -46,7 +47,7 @@ export class PlayersController {
 
     // Verify if register exists
     if (_id) {
-      const isRegistered = await this.clientAdminBackend.send('check-player', _id).toPromise()
+      const isRegistered = await firstValueFrom(this.clientAdminBackend.send('check-player', _id))
       if (!isRegistered) {
         throw new BadRequestException(`Jogador de id ${_id} não encontrado!`)
       }
@@ -64,7 +65,7 @@ export class PlayersController {
 
     // Verify if register exists
     if (_id) {
-      const isRegistered = await this.clientAdminBackend.send('check-player', _id).toPromise()
+      const isRegistered = await firstValueFrom(this.clientAdminBackend.send('check-player', _id))
       if (!isRegistered) {
         throw new BadRequestException(`Jogador de id ${_id} não encontrado!`)
       }
