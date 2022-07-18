@@ -1,6 +1,6 @@
 // Dependencies
-import { Body, Controller, Post, Get, Put, Logger, Query, Param, Delete } from '@nestjs/common'
-import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices'
+import { Body, Controller, Post, Get, Put, Logger, Query, Param, Delete, NotFoundException, BadRequestException } from '@nestjs/common'
+import { ClientProxy } from '@nestjs/microservices'
 import { Observable } from 'rxjs'
 
 // Implementations
@@ -26,23 +26,50 @@ export class PlayersController {
   }  
 
   @Get()
-  findPlayer(@Query('id') id: string): Observable<any> {
+  async findPlayer(@Query('id') id: string): Promise<Observable<any>> {
     this.logger.log(`Get Players: ${id}`)
+
+    // Verify if register exists
+    if (id) {
+      const isRegistered = await this.clientAdminBackend.send('check-player', id).toPromise()
+      if (!isRegistered) {
+        throw new NotFoundException(`Jogador de id ${id} não encontrado!`)
+      }
+    }
+
     return this.clientAdminBackend.send('get-players', id ? id : '')
   }
 
   @Delete('/:id')
-  deletePlayer(@Param('id', ValidateParamsPipe) _id: string) {
+  async deletePlayer(@Param('id', ValidateParamsPipe) _id: string) {
     this.logger.log(`Delete Player: ${_id}`)
+
+    // Verify if register exists
+    if (_id) {
+      const isRegistered = await this.clientAdminBackend.send('check-player', _id).toPromise()
+      if (!isRegistered) {
+        throw new BadRequestException(`Jogador de id ${_id} não encontrado!`)
+      }
+    }
+
     return this.clientAdminBackend.send('delete-player', _id)
   }
 
   @Put('/:id')
-  updatedPlayer(
+  async updatedPlayer(
     @Body() body: UpdatePlayerDTO,
     @Param('id', ValidateParamsPipe) _id: string
   ) {
     this.logger.log(`Update Player: ${JSON.stringify(body)}`)
+
+    // Verify if register exists
+    if (_id) {
+      const isRegistered = await this.clientAdminBackend.send('check-player', _id).toPromise()
+      if (!isRegistered) {
+        throw new BadRequestException(`Jogador de id ${_id} não encontrado!`)
+      }
+    }
+
     return this.clientAdminBackend.send('update-player', { id: _id, player: body })
   }
 }

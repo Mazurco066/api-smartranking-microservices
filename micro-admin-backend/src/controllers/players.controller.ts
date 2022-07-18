@@ -128,4 +128,29 @@ export class PlayersController {
       ackErrorMessage(error, channel, defaultMessage)
     }
   }
+
+  @MessagePattern('check-player')
+  async checkCategory(
+    @Payload() id: string,
+    @Ctx() context: RmqContext
+  ) {
+
+    // Retrieve original message and nestjs channel
+    const channel = context.getChannelRef()
+    const defaultMessage = context.getMessage()
+
+    try {
+
+      // Get player
+      const returnPayload = await this.playersService.findPlayer(id)
+
+      // Ack message and return
+      await channel.ack(defaultMessage)
+      return returnPayload
+
+    } catch (error) {
+      this.logger.error(`Error: ${JSON.stringify(error.message)}`)
+      ackErrorMessage(error, channel, defaultMessage)
+    }
+  }
 }
