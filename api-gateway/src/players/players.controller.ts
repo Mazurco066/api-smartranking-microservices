@@ -1,5 +1,5 @@
 // Dependencies
-import { Body, Controller, Post, Get, Put, Logger, Query, Param, Delete, NotFoundException, BadRequestException } from '@nestjs/common'
+import { Body, Controller, Post, Get, Put, Logger, Query, Param, Delete, NotFoundException, BadRequestException, UseInterceptors, UploadedFile, InternalServerErrorException } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 import { Observable, firstValueFrom } from 'rxjs'
 
@@ -7,6 +7,8 @@ import { Observable, firstValueFrom } from 'rxjs'
 import { AddPlayerDTO, UpdatePlayerDTO } from './dtos'
 import { ValidateParamsPipe } from '../common/pipes'
 import { proxyClient } from '../common/helpers'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service'
 
 @Controller('api/v1/players')
 export class PlayersController {
@@ -15,7 +17,9 @@ export class PlayersController {
   private clientAdminBackend: ClientProxy
 
   // Class constructor (Retrieve rabbitmq proxy connection)
-  constructor() {
+  constructor(
+    private cloudinaryService: CloudinaryService
+  ) {
     this.clientAdminBackend = proxyClient
   }
 
@@ -72,5 +76,32 @@ export class PlayersController {
     }
 
     return this.clientAdminBackend.send('update-player', { id: _id, player: body })
+  }
+
+  // Upload file feature
+  @Post('/:id/upload')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile (
+    @UploadedFile() file: any,
+    @Param('id', ValidateParamsPipe) _id: string
+  ) {
+    this.logger.log(`Upload Player avatar: ${_id}`)
+
+    // Verify if register exists
+    if (_id) {
+      const isRegistered = await firstValueFrom(this.clientAdminBackend.send('check-player', _id))
+      if (!isRegistered) {
+        throw new BadRequestException(`Jogador de id ${_id} não encontrado!`)
+      }
+    }
+
+    // Start file upload
+    const uploadResult = await this.cloudinaryService.uploadFileFromBuffer(file, _id)
+    if (uploadResult.error) {
+      throw new InternalServerErrorException('Ocorreu um erro ao tentar fazer o upload de sua imagem. Tente novamente mais tarde')
+    }
+
+    // Update player avatar
+    return this.clientAdminBackend.send('update-player', { id: _id, player: { avatar: uploadResult.url }})
   }
 }
