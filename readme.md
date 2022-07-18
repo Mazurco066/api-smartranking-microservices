@@ -19,5 +19,10 @@ yarn start:dev
 cd micro-admin-backend
 yarn install
 yarn start:dev
+
+# Install dependendencies and start micro-challenges
+cd micro-challenges
+yarn install
+yarn start:dev
 ```
 Obs: Dont forget to copy the content of .env.example file to a new .env file before starting
