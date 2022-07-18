@@ -1,11 +1,11 @@
 // Dependencies
 import { Controller, Logger } from '@nestjs/common'
-import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
+import { Ctx, EventPattern, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 
 // Implementation
-import { PlayerInterface } from '../interfaces'
-import { PlayersService } from '../services'
-import { ackMongodbErrors } from '../config'
+import { CategoryInterface } from './interfaces'
+import { CategoriesService } from './categories.service'
+import { ackMongodbErrors } from '../common/config'
 
 // Ack massage helper
 const ackErrorMessage = (error: Error, channel: any, identifier: any): void => {
@@ -17,21 +17,21 @@ const ackErrorMessage = (error: Error, channel: any, identifier: any): void => {
 }
 
 @Controller()
-export class PlayersController {
+export class CategoriesController {
   // Class constructor
-  constructor(private readonly playersService: PlayersService) {}
+  constructor(private readonly categoriesService: CategoriesService) {}
 
   // Nestjs console logger
-  private logger = new Logger(PlayersController.name)
+  private logger = new Logger(CategoriesController.name)
 
-  // Message broker feature (microservices)
-  @MessagePattern('add-player')
-  async addPlayer(
-    @Payload() player: PlayerInterface,
+  // Event subscriber feature (microservices)
+  @EventPattern('add-category')
+  async addCategory(
+    @Payload() category: CategoryInterface,
     @Ctx() context: RmqContext
   ) {
     // Logging event
-    this.logger.log(`Player: ${JSON.stringify(player)}`)
+    this.logger.log(`Category: ${JSON.stringify(category)}`)
 
     // Retrieve original message and nestjs channel
     const channel = context.getChannelRef()
@@ -40,9 +40,8 @@ export class PlayersController {
     try {
 
       // Persist and ack message
-      const returnPayload = await this.playersService.storePlayer(player)
+      await this.categoriesService.storeCategory(category)
       await channel.ack(defaultMessage)
-      return returnPayload
 
     } catch (error) {
       this.logger.error(`Error: ${JSON.stringify(error.message)}`)
@@ -50,13 +49,14 @@ export class PlayersController {
     }
   }
 
-  @MessagePattern('update-player')
+  // Message broker feature (microservices)
+  @MessagePattern('update-category')
   async updateCategory(
     @Payload() data: any,
     @Ctx() context: RmqContext
   ) {
     // Logging event
-    this.logger.log(`Update Player data: ${JSON.stringify(data)}`)
+    this.logger.log(`Update Category data: ${JSON.stringify(data)}`)
 
     // Retrieve original message and nestjs channel
     const channel = context.getChannelRef()
@@ -66,8 +66,8 @@ export class PlayersController {
 
       // Persist and ack message
       const id: string = data.id
-      const player: PlayerInterface = data.player
-      const returnPayload = await this.playersService.updatePlayer(player, id)
+      const category: CategoryInterface = data.category
+      const returnPayload = await this.categoriesService.updateCategory(category, id)
       await channel.ack(defaultMessage)
       return returnPayload
 
@@ -77,13 +77,13 @@ export class PlayersController {
     }
   }
 
-  @MessagePattern('get-players')
+  @MessagePattern('get-categories')
   async getCategories(
     @Payload() id: string,
     @Ctx() context: RmqContext
   ) {
     // Logging event
-    this.logger.log(`Player id: ${id}`)
+    this.logger.log(`Category id: ${id}`)
 
     // Retrieve original message and nestjs channel
     const channel = context.getChannelRef()
@@ -93,8 +93,8 @@ export class PlayersController {
 
       // Persist and ack message
       const returnPayload = id
-        ? await this.playersService.findPlayer(id)
-        : await this.playersService.findPlayers()
+        ? await this.categoriesService.findCategory(id)
+        : await this.categoriesService.findCategories()
       await channel.ack(defaultMessage)
       return returnPayload
 
@@ -104,13 +104,13 @@ export class PlayersController {
     }
   }
 
-  @MessagePattern('delete-player')
+  @MessagePattern('delete-category')
   async deleteCategories(
     @Payload() id: string,
     @Ctx() context: RmqContext
   ) {
     // Logging event
-    this.logger.log(`Player id: ${id}`)
+    this.logger.log(`Category id: ${id}`)
 
     // Retrieve original message and nestjs channel
     const channel = context.getChannelRef()
@@ -119,7 +119,7 @@ export class PlayersController {
     try {
 
       // Persist and ack message
-      await this.playersService.deletePlayer(id)
+      await this.categoriesService.deleteCategory(id)
       await channel.ack(defaultMessage)
       return { id }
 
@@ -129,7 +129,7 @@ export class PlayersController {
     }
   }
 
-  @MessagePattern('check-player')
+  @MessagePattern('check-category')
   async checkCategory(
     @Payload() id: string,
     @Ctx() context: RmqContext
@@ -141,8 +141,8 @@ export class PlayersController {
 
     try {
 
-      // Get player
-      const returnPayload = await this.playersService.findPlayer(id)
+      // Get category
+      const returnPayload = await this.categoriesService.findCategory(id)
 
       // Ack message and return
       await channel.ack(defaultMessage)

@@ -3,10 +3,11 @@ import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
 
 // Implementation
-import { CategoriesController, PlayersController } from './controllers'
-import { CategoriesService, PlayersService } from './services'
-import { databaseURI } from './config'
-import { Category, CategorySchema, Player, PlayerSchema } from './interfaces'
+import { databaseURI } from './common/config'
+
+// Modules
+import { CategoriesModule } from './categories/categories.module'
+import { PlayersModule } from './players/players.module'
 
 @Module({
   imports: [
@@ -15,12 +16,10 @@ import { Category, CategorySchema, Player, PlayerSchema } from './interfaces'
       useUnifiedTopology: true,
       dbName: 'SmartRankingAdmin'
     }),
-    MongooseModule.forFeature([
-      { name: Category.name, schema: CategorySchema },
-      { name: Player.name, schema: PlayerSchema }
-    ])
+    CategoriesModule,
+    PlayersModule
   ],
-  controllers: [ CategoriesController, PlayersController ],
-  providers: [ CategoriesService, PlayersService ]
+  controllers: [],
+  providers: []
 })
 export class AppModule {}

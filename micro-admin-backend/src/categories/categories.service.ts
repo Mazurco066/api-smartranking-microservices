@@ -4,8 +4,8 @@ import { RpcException } from '@nestjs/microservices'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { ObjectId } from 'mongodb'
-import { PlayersService } from './players.service'
-import { Category, CategoryDocument, CategoryInterface } from '../interfaces'
+import { PlayersService } from '../players/players.service'
+import { Category, CategoryDocument, CategoryInterface } from './interfaces'
 
 // Service
 @Injectable()
