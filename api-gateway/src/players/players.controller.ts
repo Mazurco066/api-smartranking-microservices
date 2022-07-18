@@ -87,6 +87,11 @@ export class PlayersController {
   ) {
     this.logger.log(`Upload Player avatar: ${_id}`)
 
+    // Validate if it has a file
+    if (!file) {
+      throw new BadRequestException('Nenhum arquivo foi enviado na requisição. Insira um arquivo e tente novamente.')
+    }
+
     // Verify if register exists
     if (_id) {
       const isRegistered = await firstValueFrom(this.clientAdminBackend.send('check-player', _id))
