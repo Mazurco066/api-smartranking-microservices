@@ -153,4 +153,29 @@ export class CategoriesController {
       ackErrorMessage(error, channel, defaultMessage)
     }
   }
+
+  @MessagePattern('check-category-by-title')
+  async checkCategoryByTitle(
+    @Payload() title: string,
+    @Ctx() context: RmqContext
+  ) {
+
+    // Retrieve original message and nestjs channel
+    const channel = context.getChannelRef()
+    const defaultMessage = context.getMessage()
+
+    try {
+
+      // Get category
+      const returnPayload = await this.categoriesService.findCategoryByTitle(title)
+
+      // Ack message and return
+      await channel.ack(defaultMessage)
+      return returnPayload
+
+    } catch (error) {
+      this.logger.error(`Error: ${JSON.stringify(error.message)}`)
+      ackErrorMessage(error, channel, defaultMessage)
+    }
+  }
 }

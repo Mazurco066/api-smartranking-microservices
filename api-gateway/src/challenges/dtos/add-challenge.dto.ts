@@ -15,7 +15,6 @@ export class AddChallengeDTO {
   @IsString({ message: 'Campo "category" deve ser do tipo String' })
   readonly category: string
 
-
   @IsArray({ message: 'Campo "players" deve ser do tipo Array' })
   @ArrayMinSize(2, { message: 'Campo "players" deve conter exatamente 2 jogadores' })
   @ArrayMaxSize(2, { message: 'Campo "players" deve conter exatamente 2 jogadores' })

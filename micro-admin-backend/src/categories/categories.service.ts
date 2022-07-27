@@ -53,6 +53,14 @@ export class CategoriesService {
     return foundCategory
   }
 
+  async findCategoryByTitle(title: string): Promise<Category> {
+    const foundCategory = await this.findByTitle(title)
+    // if (!foundCategory) {
+    //   throw new RpcException(`[E404] Categoria de id ${id} não encontrada!`)
+    // }
+    return foundCategory
+  }
+
   async deleteCategory(id: string): Promise<void> {
     // const foundCategory = await this.findById(id)
     // if (!foundCategory) {

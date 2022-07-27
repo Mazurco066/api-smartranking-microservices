@@ -1,10 +1,23 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+// Dependencies
+import { Module } from '@nestjs/common'
+import { MongooseModule } from '@nestjs/mongoose'
+
+// Implementation
+import { databaseURI } from './common/config'
+
+// Modules
+import { ChallengesModule } from './challenges/challenges.module'
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    MongooseModule.forRoot(databaseURI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      dbName: 'SmartRankingChallenges'
+    }),
+    ChallengesModule
+  ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
