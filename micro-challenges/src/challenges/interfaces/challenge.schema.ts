@@ -27,13 +27,13 @@ export class Challenge {
   @Prop({ required: true })
   category: string
 
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'Player' })
+  @Prop({ type: SchemaTypes.ObjectId })
   requester: ObjectId
 
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'Match' })
+  @Prop({ type: SchemaTypes.ObjectId })
   match: ObjectId
 
-  @Prop({ type: [SchemaTypes.ObjectId], ref: 'Player', default: [] })
+  @Prop({ type: [SchemaTypes.ObjectId], default: [] }) // ref: 'Player'
   players: ObjectId[]
 }
 

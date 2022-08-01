@@ -72,10 +72,9 @@ export class ChallengesService {
 
   async findChallenge(id: string): Promise<Challenge> {
     const foundChallenge = await this.findById(id)
-    if (!foundChallenge) {
-      throw new NotFoundException(`Desafio de id ${id} não encontrado!`)
-    }
-
+    // if (!foundChallenge) {
+    //   throw new NotFoundException(`Desafio de id ${id} não encontrado!`)
+    // }
     return foundChallenge
   }
 
@@ -95,9 +94,7 @@ export class ChallengesService {
   // Persist methods
   async findById(id: string): Promise<Challenge> {
     return await this.challengeSchema.findOne({ _id: id })
-      .populate('requester')
       .populate('match')
-      .populate('players')
   }
 
   private async findAll(): Promise<Challenge[]> {
@@ -114,9 +111,7 @@ export class ChallengesService {
         { requester: new ObjectId(id) }
       ]
     })
-      .populate('requester')
       .populate('match')
-      .populate('players')
   }
 
   // private async storeMatch(data: AssignChallengeDTO, category: string, players: ObjectId[]): Promise<Match> {
@@ -169,9 +164,9 @@ export class ChallengesService {
       }, {
         new: true
       })
-      .populate('requester')
+      // .populate('requester')
       .populate('match')
-      .populate('players')
+      // .populate('players')
       return r
       
     } catch(e) {

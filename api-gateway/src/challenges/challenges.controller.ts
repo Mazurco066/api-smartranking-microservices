@@ -4,7 +4,7 @@ import { ClientProxy } from '@nestjs/microservices'
 import { firstValueFrom, Observable } from 'rxjs'
 
 // Implementations
-import { AddChallengeDTO } from './dtos'
+import { AddChallengeDTO, UpdateChallengeDTO } from './dtos'
 import { proxyClientAdmin, proxyClientChallenges } from '../common/helpers'
 
 @Controller('api/v1/challenges')
@@ -58,4 +58,46 @@ export class ChallengesController {
     return this.clientChallengeBackend.send('add-challenge', { challenge: body, category: playerCategory })
   }
 
+  @Put('/:id')
+  async updateChallenge(
+    @Param('id') id: string,
+    @Body() body: UpdateChallengeDTO
+  ) {
+    this.logger.log(`Update challenge (${id}): ${JSON.stringify(body)}`)
+
+    // Validate if challenge exists
+    const isRegistered = await firstValueFrom(this.clientChallengeBackend.send('check-challenge', id))
+    if (!isRegistered) {
+      throw new NotFoundException(`Desafio de id ${id} não foi encontrado!`)
+    }
+
+    // Update challenge
+    return this.clientChallengeBackend.send('update-challenge', { challenge: body, id })
+  }
+
+  @Get()
+  async findChallenge (
+    @Query('id') id : string,
+    @Query('playerId') playerId: string
+  ) {
+    this.logger.log(`Find challenge: ${id}`)
+
+    // Verify if register exists
+    if (id) {
+      const isRegistered = await firstValueFrom(this.clientChallengeBackend.send('check-challenge', id))
+      if (!isRegistered) {
+        throw new NotFoundException(`Desafio de id ${id} não encontrado!`)
+      }
+    } else {
+      // Validate if player id is present
+      if (!playerId) {
+        throw new BadRequestException('O parametro "playerId" é requerido!')
+      }
+    }
+
+    return this.clientChallengeBackend.send('get-challenge', {
+      id: id ? id: '',
+      playerId: playerId
+    })
+  }
 }

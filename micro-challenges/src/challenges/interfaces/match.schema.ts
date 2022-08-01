@@ -17,13 +17,13 @@ export class Match {
   @Prop({ required: true })
   category: string
 
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'Player' })
+  @Prop({ type: SchemaTypes.ObjectId }) // ref: 'Player'
   def: ObjectId
 
   @Prop({ required: false, default: () => [] })
   result: Result[]
 
-  @Prop({ type: [SchemaTypes.ObjectId], ref: 'Player', default: [] })
+  @Prop({ type: [SchemaTypes.ObjectId], default: [] }) // ref: 'Player'
   players: ObjectId[]
 }
 

@@ -35,7 +35,6 @@ export class PlayersController {
 
     // Verify if register exists
     if (id) {
-      // const isRegistered = await this.clientAdminBackend.send('check-player', id).toPromise()
       const isRegistered = await firstValueFrom(this.clientAdminBackend.send('check-player', id))
       if (!isRegistered) {
         throw new NotFoundException(`Jogador de id ${id} não encontrado!`)
