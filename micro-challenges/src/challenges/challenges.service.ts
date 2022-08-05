@@ -51,17 +51,19 @@ export class ChallengesService {
   // async assignChallengeMatch(body: ChallengeInterface, id: string): Promise<Challenge> {
   //   this.logger.log(`assignChallengeMatch - params: ${JSON.stringify(body)}`)
 
+  //   //! Validate at gateway
   //   // Validate challenge
-  //   const hasChallenge = await this.findById(id)
-  //   if (!hasChallenge) {
-  //     throw new NotFoundException(`Desafio de id ${id} não encontrado!`)
-  //   }
+  //   // const hasChallenge = await this.findById(id)
+  //   // if (!hasChallenge) {
+  //   //   throw new NotFoundException(`Desafio de id ${id} não encontrado!`)
+  //   // }
 
+  //   //! Validate at gateway
   //   // Is winner a player from challenge
-  //   const isWinnerAChallenger = hasChallenge.players.find((p: any) => p._id === body.def)
-  //   if (!isWinnerAChallenger) {
-  //     throw new BadRequestException(`O Jogador de id ${body.def} não está entre os jogadores do desafio!`)
-  //   }
+  //   // const isWinnerAChallenger = hasChallenge.players.find((p: any) => p._id === body.def)
+  //   // if (!isWinnerAChallenger) {
+  //   //   throw new BadRequestException(`O Jogador de id ${body.def} não está entre os jogadores do desafio!`)
+  //   // }
 
   //   // Create match
   //   const createdMatch = await this.storeMatch(body, hasChallenge.category, hasChallenge.players)
@@ -99,9 +101,7 @@ export class ChallengesService {
 
   private async findAll(): Promise<Challenge[]> {
     return await this.challengeSchema.find()
-      .populate('requester')
       .populate('match')
-      .populate('players')
   }
 
   private async findByPlayer(id: string): Promise<Challenge[]> {
@@ -113,22 +113,6 @@ export class ChallengesService {
     })
       .populate('match')
   }
-
-  // private async storeMatch(data: AssignChallengeDTO, category: string, players: ObjectId[]): Promise<Match> {
-  //   try {
-
-  //     const r =  await this.matchSchema.create({
-  //       ...data,
-  //       def: new ObjectId(data.def),
-  //       category: category,
-  //       players: players
-  //     })
-  //     return r
-
-  //   } catch(err) {
-  //     throw new MongoError(err)
-  //   }
-  // }
 
   private async store(data: ChallengeInterface, category: any): Promise<Challenge> {
     try {
